@@ -125,6 +125,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/images/platformSmallTall.png":
+/*!******************************************!*\
+  !*** ./src/images/platformSmallTall.png ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "0587f9be8e442eb74b2fe283bbf1a947.png");
+
+/***/ }),
+
 /***/ "./src/js/canvas.js":
 /*!**************************!*\
   !*** ./src/js/canvas.js ***!
@@ -137,11 +150,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_platform_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../images/platform.png */ "./src/images/platform.png");
 /* harmony import */ var _images_hills_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../images/hills.png */ "./src/images/hills.png");
 /* harmony import */ var _images_background_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../images/background.png */ "./src/images/background.png");
+/* harmony import */ var _images_platformSmallTall_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../images/platformSmallTall.png */ "./src/images/platformSmallTall.png");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -156,6 +171,7 @@ var Player = /*#__PURE__*/function () {
   function Player() {
     _classCallCheck(this, Player);
 
+    this.speed = 10;
     this.position = {
       x: 100,
       y: 100
@@ -251,29 +267,10 @@ function createImage(imageSrc) {
 }
 
 var platformImage = createImage(_images_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+var platformSmallTallImage = createImage(_images_platformSmallTall_png__WEBPACK_IMPORTED_MODULE_3__["default"]);
 var player = new Player();
-var plataforms = [new Platform({
-  x: -1,
-  y: 470,
-  image: platformImage
-}), new Platform({
-  x: platformImage.width - 2,
-  y: 470,
-  image: platformImage
-}), new Platform({
-  x: platformImage.width * 2 + 100,
-  y: 470,
-  image: platformImage
-})];
-var genericObjects = [new GenericObject({
-  x: -1,
-  y: -1,
-  image: createImage(_images_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
-}), new GenericObject({
-  x: -1,
-  y: -1,
-  image: createImage(_images_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
-})];
+var plataforms = [];
+var genericObjects = [];
 var scrollOffset = 0;
 var keys = {
   right: {
@@ -283,6 +280,59 @@ var keys = {
     pressed: false
   }
 };
+
+function init() {
+  platformImage = createImage(_images_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
+  platformSmallTallImage = createImage(_images_platformSmallTall_png__WEBPACK_IMPORTED_MODULE_3__["default"]);
+  player = new Player();
+  plataforms = [new Platform({
+    x: platformImage.width * 4 + 300 - 2 + platformImage.width - platformSmallTallImage.width,
+    y: 270,
+    image: platformSmallTallImage
+  }), new Platform({
+    x: -1,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width - 2,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width * 2 + 100,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width * 3 + 300,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width * 4 + 300 - 2,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width * 5 + 700 - 2,
+    y: 470,
+    image: platformImage
+  })];
+  genericObjects = [new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(_images_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+  }), new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(_images_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+  })];
+  scrollOffset = 0;
+  keys = {
+    right: {
+      pressed: false
+    },
+    left: {
+      pressed: false
+    }
+  };
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -297,27 +347,27 @@ function animate() {
   player.update();
 
   if (keys.right.pressed && player.position.x < 400) {
-    player.velocity.x = 5;
+    player.velocity.x = player.speed;
   } else if (keys.left.pressed && player.position.x > 100) {
-    player.velocity.x = -5;
+    player.velocity.x = -player.speed;
   } else {
     player.velocity.x = 0;
 
     if (keys.right.pressed) {
-      scrollOffset += 5;
+      scrollOffset += player.speed;
       plataforms.forEach(function (platform) {
-        platform.position.x -= 5;
+        platform.position.x -= player.speed;
       });
       genericObjects.forEach(function (genericObjects) {
-        genericObjects.position.x -= 3;
+        genericObjects.position.x -= player.speed * 0.66;
       });
     } else if (keys.left.pressed) {
-      scrollOffset -= 5;
+      scrollOffset -= player.speed;
       plataforms.forEach(function (platform) {
-        platform.position.x += 5;
+        platform.position.x += player.speed;
       });
       genericObjects.forEach(function (genericObjects) {
-        genericObjects.position.x += 3;
+        genericObjects.position.x += player.speed * 0.66;
       });
     }
   }
@@ -329,11 +379,16 @@ function animate() {
     }
   });
 
-  if (scrollOffset > 2000) {
+  if (scrollOffset > platformImage.width * 5 + 300 - 2) {
     console.log('you venceu');
+  }
+
+  if (player.position.y > canvas.height) {
+    init();
   }
 }
 
+init();
 animate();
 addEventListener('keydown', function (_ref3) {
   var keyCode = _ref3.keyCode;
@@ -344,7 +399,7 @@ addEventListener('keydown', function (_ref3) {
       break;
 
     case 83:
-      player.velocity.y += 20;
+      // player.velocity.y += 20;
       break;
 
     case 68:
@@ -352,7 +407,7 @@ addEventListener('keydown', function (_ref3) {
       break;
 
     case 87:
-      player.velocity.y -= 20;
+      player.velocity.y -= 25;
       break;
   }
 });
@@ -365,7 +420,7 @@ addEventListener('keyup', function (_ref4) {
       break;
 
     case 83:
-      player.velocity.y = 0;
+      // player.velocity.y = 0;
       break;
 
     case 68:
@@ -373,7 +428,6 @@ addEventListener('keyup', function (_ref4) {
       break;
 
     case 87:
-      player.velocity.y = 0;
       break;
   }
 });
